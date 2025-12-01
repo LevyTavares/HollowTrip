@@ -7,7 +7,7 @@ import {
   ScrollView,
   StatusBar,
 } from "react-native";
-import { Audio } from "expo-av";
+import { Audio } from "expo-audio";
 import CartaoAtracao from "./assets/CartaoAtracao";
 
 const locais = {
@@ -39,24 +39,27 @@ export default function App() {
   const [sound, setSound] = useState();
 
   useEffect(() => {
+    let isMounted = true;
     async function loadSound() {
       try {
-        const { sound } = await Audio.Sound.createAsync(
-          require("./music/01. Enter Hallownest.mp3"),
-          { shouldPlay: true, isLooping: true, volume: 0.3 }
-        );
-        setSound(sound);
+        const soundObj = new Audio.Sound();
+        await soundObj.loadAsync(require("./music/01. Enter Hallownest.mp3"));
+        await soundObj.setIsLoopingAsync(true);
+        await soundObj.setVolumeAsync(0.3);
+        await soundObj.playAsync();
+        if (isMounted) setSound(soundObj);
       } catch (error) {
         console.log("Erro ao carregar música:", error);
       }
     }
     loadSound();
 
-    return sound
-      ? () => {
-          sound.unloadAsync();
-        }
-      : undefined;
+    return () => {
+      isMounted = false;
+      if (sound) {
+        sound.unloadAsync();
+      }
+    };
   }, []);
 
   return (
