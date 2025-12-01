@@ -7,7 +7,6 @@ export default function CartaoAtracao({ titulo, descricao, imagemSource }) {
   return (
     <View style={styles.card}>
       <View style={styles.imageWrapper}>
-        
         <Image
           source={imagemSource /* mantenha null até inserir o require */}
           style={styles.image}
@@ -31,7 +30,7 @@ const styles = StyleSheet.create({
   },
   imageWrapper: {
     width: "100%",
-    height: 180,
+    aspectRatio: 16 / 9,
     backgroundColor: "#1b1f2a",
     borderRadius: 8,
     marginBottom: 12,
