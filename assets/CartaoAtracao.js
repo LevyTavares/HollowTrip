@@ -7,9 +7,7 @@ export default function CartaoAtracao({ titulo, descricao, imagemSource }) {
   return (
     <View style={styles.card}>
       <View style={styles.imageWrapper}>
-        {/* Onde houver imagem local, use require: */}
-        {/* exemplo: source={require('../assets/cidade-das-lagrimas.png')} */}
-        {/* INSIRA O REQUIRE DA SUA IMAGEM AQUI */}
+        
         <Image
           source={imagemSource /* mantenha null até inserir o require */}
           style={styles.image}
