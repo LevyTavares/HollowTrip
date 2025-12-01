@@ -1,32 +1,34 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
   StyleSheet,
   TouchableOpacity,
   ScrollView,
+  StatusBar,
 } from "react-native";
+import { Audio } from "expo-av";
 import CartaoAtracao from "./assets/CartaoAtracao";
 
 const locais = {
   cidadeDasLagrimas: {
     titulo: "Cidade das Lágrimas",
     descricao:
-      "A metrópole melancólica de Hallownest, marcada por chuva eterna e arquitetura majestosa.",
+      "A metrópole melancólica de Hallownest, onde a chuva eterna cai sobre elegantes torres azuladas. Aqui, almas perdidas vagam entre fontes ornamentadas e janelas que choram eternamente. Um lugar de beleza trágica e segredos submersos nas águas cristalinas.",
     // Usa arquivo existente em assets/
     imagem: require("./assets/hn.jpeg"),
   },
   caminhoVerde: {
     titulo: "Caminho Verde",
     descricao:
-      "Floresta exuberante coberta por musgo e vida selvagem. Trilhas sinuosas levam a segredos antigos.",
+      "Uma floresta exuberante onde o musgo ancestral cobre cada superfície. Criaturas ácidas protegem trilhas sinuosas que revelam santuários esquecidos. A natureza selvagem reclama o que um dia foi civilização, enquanto esporos brilhantes dançam no ar úmido.",
     // Usa arquivo existente em assets/
     imagem: require("./assets/hn-2.jpeg"),
   },
   ninhoProfundo: {
     titulo: "Ninho Profundo",
     descricao:
-      "Profundezas escuras e labirínticas onde criaturas tecem redes e a luz raramente alcança.",
+      "Profundezas labirínticas tecidas em trevas impenetráveis. Teias ancestrais envolvem corredores onde aranhas colossais espreitam nas sombras. A luz raramente alcança estas câmaras esquecidas, onde os ecos do passado sussurram entre fios de seda negra.",
     // Usa arquivo existente em assets/
     imagem: require("./assets/hn-3.jpeg"),
   },
@@ -34,47 +36,81 @@ const locais = {
 
 export default function App() {
   const [localAtual, setLocalAtual] = useState(locais.cidadeDasLagrimas);
+  const [sound, setSound] = useState();
+
+  useEffect(() => {
+    async function loadSound() {
+      try {
+        const { sound } = await Audio.Sound.createAsync(
+          require("./music/01. Enter Hallownest.mp3"),
+          { shouldPlay: true, isLooping: true, volume: 0.3 }
+        );
+        setSound(sound);
+      } catch (error) {
+        console.log("Erro ao carregar música:", error);
+      }
+    }
+    loadSound();
+
+    return sound
+      ? () => {
+          sound.unloadAsync();
+        }
+      : undefined;
+  }, []);
 
   return (
-    <ScrollView
-      style={styles.container}
-      contentContainerStyle={styles.scrollContent}
-    >
-      <Text style={styles.header}>Turismo em Hallownest</Text>
+    <View style={styles.wrapper}>
+      <StatusBar barStyle="light-content" backgroundColor="#0a0a0e" />
+      <ScrollView
+        style={styles.container}
+        contentContainerStyle={styles.scrollContent}
+      >
+        <View style={styles.headerContainer}>
+          <Text style={styles.header}>Turismo em Hallownest</Text>
+          <Text style={styles.subtitle}>
+            Explore as profundezas do reino esquecido
+          </Text>
+        </View>
 
-      <View style={styles.botoesRow}>
-        <TouchableOpacity
-          style={styles.botao}
-          onPress={() => setLocalAtual(locais.cidadeDasLagrimas)}
-        >
-          <Text style={styles.botaoTexto}>Cidade das Lágrimas</Text>
-        </TouchableOpacity>
+        <View style={styles.botoesRow}>
+          <TouchableOpacity
+            style={styles.botao}
+            onPress={() => setLocalAtual(locais.cidadeDasLagrimas)}
+          >
+            <Text style={styles.botaoTexto}>Cidade das Lágrimas</Text>
+          </TouchableOpacity>
 
-        <TouchableOpacity
-          style={styles.botao}
-          onPress={() => setLocalAtual(locais.caminhoVerde)}
-        >
-          <Text style={styles.botaoTexto}>Caminho Verde</Text>
-        </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.botao}
+            onPress={() => setLocalAtual(locais.caminhoVerde)}
+          >
+            <Text style={styles.botaoTexto}>Caminho Verde</Text>
+          </TouchableOpacity>
 
-        <TouchableOpacity
-          style={styles.botao}
-          onPress={() => setLocalAtual(locais.ninhoProfundo)}
-        >
-          <Text style={styles.botaoTexto}>Ninho Profundo</Text>
-        </TouchableOpacity>
-      </View>
+          <TouchableOpacity
+            style={styles.botao}
+            onPress={() => setLocalAtual(locais.ninhoProfundo)}
+          >
+            <Text style={styles.botaoTexto}>Ninho Profundo</Text>
+          </TouchableOpacity>
+        </View>
 
-      <CartaoAtracao
-        titulo={localAtual.titulo}
-        descricao={localAtual.descricao}
-        imagemSource={localAtual.imagem}
-      />
-    </ScrollView>
+        <CartaoAtracao
+          titulo={localAtual.titulo}
+          descricao={localAtual.descricao}
+          imagemSource={localAtual.imagem}
+        />
+      </ScrollView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  wrapper: {
+    flex: 1,
+    backgroundColor: "#0a0a0e",
+  },
   container: {
     backgroundColor: "#0f0f13",
     paddingTop: 48,
@@ -83,12 +119,27 @@ const styles = StyleSheet.create({
   scrollContent: {
     paddingBottom: 32,
   },
+  headerContainer: {
+    marginBottom: 24,
+    paddingBottom: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: "#1f2937",
+  },
   header: {
     color: "#e6e6e6",
-    fontSize: 22,
+    fontSize: 26,
     fontWeight: "700",
     textAlign: "center",
-    marginBottom: 20,
+    marginBottom: 6,
+    textShadowColor: "#000",
+    textShadowOffset: { width: 0, height: 2 },
+    textShadowRadius: 4,
+  },
+  subtitle: {
+    color: "#9ca3af",
+    fontSize: 13,
+    textAlign: "center",
+    fontStyle: "italic",
   },
   botoesRow: {
     flexDirection: "row",
@@ -104,6 +155,11 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#2f3440",
     flex: 1,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.5,
+    shadowRadius: 3,
+    elevation: 3,
   },
   botaoTexto: {
     color: "#cbd5e1",
