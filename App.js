@@ -7,19 +7,22 @@ const locais = {
     titulo: "Cidade das Lágrimas",
     descricao:
       "A metrópole melancólica de Hallownest, marcada por chuva eterna e arquitetura majestosa.",
-    imagem: null, // /* INSIRA O REQUIRE DA SUA IMAGEM AQUI */
+    // Substitua o caminho abaixo pelo arquivo que você colocar em assets/
+    imagem: require("./assets/hk-cidade-das-lagrimas.jpg"),
   },
   caminhoVerde: {
     titulo: "Caminho Verde",
     descricao:
       "Floresta exuberante coberta por musgo e vida selvagem. Trilhas sinuosas levam a segredos antigos.",
-    imagem: null, // /* INSIRA O REQUIRE DA SUA IMAGEM AQUI */
+    // Substitua o caminho abaixo pelo arquivo que você colocar em assets/
+    imagem: require("./assets/hk-caminho-verde.jpg"),
   },
   ninhoProfundo: {
     titulo: "Ninho Profundo",
     descricao:
       "Profundezas escuras e labirínticas onde criaturas tecem redes e a luz raramente alcança.",
-    imagem: null, // /* INSIRA O REQUIRE DA SUA IMAGEM AQUI */
+    // Substitua o caminho abaixo pelo arquivo que você colocar em assets/
+    imagem: require("./assets/hk-ninho-profundo.jpg"),
   },
 };
 
