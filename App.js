@@ -1,5 +1,11 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  ScrollView,
+} from "react-native";
 import CartaoAtracao from "./assets/CartaoAtracao";
 
 const locais = {
@@ -30,7 +36,10 @@ export default function App() {
   const [localAtual, setLocalAtual] = useState(locais.cidadeDasLagrimas);
 
   return (
-    <View style={styles.container}>
+    <ScrollView
+      style={styles.container}
+      contentContainerStyle={styles.scrollContent}
+    >
       <Text style={styles.header}>Turismo em Hallownest</Text>
 
       <View style={styles.botoesRow}>
@@ -61,16 +70,18 @@ export default function App() {
         descricao={localAtual.descricao}
         imagemSource={localAtual.imagem}
       />
-    </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     backgroundColor: "#0f0f13",
     paddingTop: 48,
     paddingHorizontal: 16,
+  },
+  scrollContent: {
+    paddingBottom: 32,
   },
   header: {
     color: "#e6e6e6",
